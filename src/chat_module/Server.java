@@ -2,58 +2,47 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Server extends Thread {
-    private LinkedList <Socket> ll;
-    private LinkedList <String> st;
-    private ServerSocket serverSocket;
+public class Server{
+   private static ServerSocket serverSocket;
+   public Server (int port) throws IOException {
+      serverSocket = new ServerSocket(port);
+      serverSocket.setSoTimeout(100000);
+   }
 
-    public GreetingServer (int port) throws IOException {
-        ll = new LinkedList <Socket> ();
-        st = new LinkedList <String> ();
-        serverSocket = new ServerSocket(port);
-    }
-
-    public void run () {
-        boolean connected = true;
-        while(connected) {
-            try {
-                Socket server = serverSocket.accept();
-                // ip_format: /192.168.0.17:34104
-                st.add(server.getRemoteSocketAddress() + "");
-
-                DataInputStream in = new DataInputStream(server.getInputStream());
-                String message = in.readUTF() + "";
-                System.out.println(message);
-                
-                for (String cred: st) {
-                    String [] ac 	= cred.split(":");
-                    String ip 		= ac[0].split("/")[1];
-                    int port 		= Integer.parseInt(ac[1]);
-
-                    System.out.println(ip + " " + port);
-
-                    Socket sock = new Socket(ip, port);
-                
-                    DataOutputStream out = new DataOutputStream(sock.getOutputStream());
-                    out.writeUTF(message);
-                    sock.close();
-                }
-                
-                // serverSocket.sendToAll(message);
-                server.close();
-
+   public static void main (String [] args) {
+      Server gs;
+      try {
+        int port = Integer.parseInt(args[0]);
+        gs = new Server(port);
+        Thread accept = new Thread(){
+            public void run(){
+                try{
+                    final LinkedList<Socket> clients = new LinkedList<Socket>();
+                    while(true){
+                        final Socket server = serverSocket.accept();
+                        clients.add(server);
+                        Thread send = new Thread(){
+                            public void run(){
+                                try{
+                                    DataInputStream in = new DataInputStream(server.getInputStream());
+                                    while(true){
+                                        String message = in.readUTF();
+                                        for(Socket s : clients){
+                                            DataOutputStream out = new DataOutputStream(s.getOutputStream());
+                                            out.writeUTF(message);
+                                        }
+                                    }
+                                } catch(Exception e){e.printStackTrace();}
+                            }
+                        };
+                        send.start();
+                    }
+                } catch(Exception e){e.printStackTrace();}
             }
-            catch(SocketTimeoutException e) { e.printStackTrace(); }
-            catch(IOException e) { e.printStackTrace(); }
-        } 
-    }
-    public static void main(String [] args) {
-        try {
-            int port = Integer.parseInt(args[0]);
-            Thread t = new GreetingServer(port);
-            t.start();
-        }
-        catch(IOException e) { e.printStackTrace(); }
-        catch(ArrayIndexOutOfBoundsException e) { e.printStackTrace(); }
-    }
+        };
+        accept.start();    
+      } 
+      catch(IOException e) { e.printStackTrace(); } 
+      catch(ArrayIndexOutOfBoundsException e) { e.printStackTrace(); }
+   }
 }

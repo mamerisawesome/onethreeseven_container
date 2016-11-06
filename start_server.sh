@@ -1,0 +1,1 @@
+javac src/chat_module/Server.java -d bin/ & java bin/Server
