@@ -1,33 +1,37 @@
 import java.net.*;
 import java.io.*;
 import java.util.*;
-public class Client {
+
+public class Client{
     public static void main (String [] args) { 	
         final Socket client;
+        
         try {
+        	Chat chatClient = new Chat();
+        	chatClient.setVisible(true);
+        	
             String serverName = args[0]; //get IP address of server from first param
             int port = Integer.parseInt(args[1]); //get port from second param
-
+                        
             /* Open a ClientSocket and connect to ServerSocket */
-            System.out.println("Connecting to " + serverName + " on port " + port);
-            client = new Socket(serverName, port);
             
-            System.out.print(">> Enter name: ");
-            Scanner name_sc = new Scanner(System.in);
-            final String name = name_sc.nextLine();
-
-            System.out.println("Just connected to " + client.getRemoteSocketAddress());
+            chatClient.getChatArea().append("Connecting to " + serverName + " on port " + port + "\n");
+            
+            client = new Socket(serverName, port);
+            chatClient.getChatArea().append("Enter name:");
+            
+            chatClient.getChatArea().append("Just connected to " + client.getRemoteSocketAddress());
+        
             /* Send data to the ServerSocket */
             Thread send = new Thread(){
                 public void run(){
-                    Scanner sc = new Scanner(System.in);
                     String message;
                     try{
                         OutputStream outToServer = client.getOutputStream();
                         DataOutputStream out = new DataOutputStream(outToServer);
                         while(true){
-                            message = sc.nextLine();		
-                            out.writeUTF(name + ": " +message);
+                            message = chatClient.getInputField().getText();		
+                            out.writeUTF(getName() + ": " +message);
                         }
                     }
                     catch(Exception e){ e.printStackTrace(); }
@@ -52,5 +56,7 @@ public class Client {
         catch(IOException e) { e.printStackTrace(); }
         catch(ArrayIndexOutOfBoundsException e) { e.printStackTrace(); }
     }
+
+	
 }
 
