@@ -10,18 +10,6 @@ public class Client{
         	Chat chatClient = new Chat();
         	chatClient.setVisible(true);
         	
-            String serverName = args[0]; //get IP address of server from first param
-            int port = Integer.parseInt(args[1]); //get port from second param
-                        
-            /* Open a ClientSocket and connect to ServerSocket */
-            
-            chatClient.getChatArea().append("Connecting to " + serverName + " on port " + port + "\n");
-            
-            client = new Socket(serverName, port);
-            chatClient.getChatArea().append("Enter name:");
-            
-            chatClient.getChatArea().append("Just connected to " + client.getRemoteSocketAddress());
-        
             /* Send data to the ServerSocket */
             Thread send = new Thread(){
                 public void run(){
