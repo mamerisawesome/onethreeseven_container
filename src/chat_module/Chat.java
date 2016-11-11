@@ -1,6 +1,10 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import javax.swing.JFrame;
@@ -24,6 +28,7 @@ public class Chat extends JFrame{
     private JTextField serverName;
     private JTextField port;
     Socket client;
+    Thread receive;
 	/**
 	 * Create the frame.
 	 */
@@ -42,7 +47,8 @@ public class Chat extends JFrame{
 		contentPane.add(inputField);
 		inputField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chatArea.append(nameField.getText());	
+				sendThread();
+				chatArea.append(name + ": " +message+"\n");
 			}
 		});
 		inputField.setColumns(10);
@@ -52,7 +58,19 @@ public class Chat extends JFrame{
 		chatArea.setBounds(466, 51, 209, 340);
 		chatArea.setEditable(false);
 		contentPane.add(chatArea);
-		
+		receive = new Thread(){
+            public void run(){
+                try{
+                    InputStream inFromServer = client.getInputStream();
+                    DataInputStream in = new DataInputStream(inFromServer);	
+                    while(true){
+                        chatArea.read(null, in);
+                    }
+                } catch(Exception e){ e.printStackTrace(); }
+            }
+        };
+		receive.start();
+        
 		nameField = new JTextField();
 		nameField.setBounds(466, 15, 209, 25);
 		nameField.addActionListener(new ActionListener(){
@@ -94,6 +112,7 @@ public class Chat extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				serverPort = Integer.parseInt(port.getText());
 				port.setText(""+serverPort);
+				port.setEditable(false);
 				chatArea.append("Connecting to " + serverIP + " on port " + serverPort + "\n");
 			}
 		});
@@ -103,7 +122,7 @@ public class Chat extends JFrame{
 		
 		
 		JLabel lblName = new JLabel("Name:");
-		lblName.setBounds(432, 20, 46, 14);
+		lblName.setBounds(423, 20, 46, 14);
 		contentPane.add(lblName);
 		
 		JLabel lblIpport = new JLabel("IP:port");
@@ -115,7 +134,7 @@ public class Chat extends JFrame{
 		contentPane.add(label);
 		
 		JButton socketButton = new JButton("Connect");
-		socketButton.setBounds(174, 48, 86, 23);
+		socketButton.setBounds(124, 48, 136, 23);
 		socketButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -129,4 +148,22 @@ public class Chat extends JFrame{
 		});
 		contentPane.add(socketButton);
 	}
+    
+    private void sendThread(){
+    	Thread send = new Thread(){
+			public void run(){
+                try{
+                    OutputStream outToServer = client.getOutputStream();
+                    DataOutputStream out = new DataOutputStream(outToServer);
+                    while(true){
+                        message = inputField.getText();		
+                        out.writeUTF(name + ": " +message);
+                    }
+                }
+                catch(Exception e){ e.printStackTrace(); }
+            }
+        };
+        send.start();
+    }
+    
 }
