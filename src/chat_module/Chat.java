@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -89,6 +90,8 @@ public class Chat extends JFrame{
 				chatArea.append(nameField.getText());	
 			}
 		});
+		enter.setBackground(new Color(0,0,0));
+		enter.setForeground(new Color(240,240,240));
 		enter.setBounds(586, 438, 89, 23);
 		contentPane.add(enter);
 		
@@ -135,6 +138,8 @@ public class Chat extends JFrame{
 		
 		final JButton socketButton = new JButton("Connect");
 		socketButton.setBounds(124, 48, 136, 23);
+		socketButton.setBackground(new Color(0,0,0));
+		socketButton.setForeground(new Color(240,240,240));
 		socketButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -146,6 +151,7 @@ public class Chat extends JFrame{
 				}
 			}
 		});
+		contentPane.setBackground(new Color(180, 180, 180));		
 		contentPane.add(socketButton);
 	}
     

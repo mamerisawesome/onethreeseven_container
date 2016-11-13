@@ -28,6 +28,11 @@ module.exports = function(grunt) {
           "d": "./bin"
         },
       },
+      start_server: {
+        command: function () {
+          return "cd bin && java Server 8080"
+        }
+      }
     },
   });
 
