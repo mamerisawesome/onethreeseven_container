@@ -133,7 +133,7 @@ public class Chat extends JFrame{
 		label.setBounds(229, 20, 46, 14);
 		contentPane.add(label);
 		
-		JButton socketButton = new JButton("Connect");
+		final JButton socketButton = new JButton("Connect");
 		socketButton.setBounds(124, 48, 136, 23);
 		socketButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {

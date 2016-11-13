@@ -7,4 +7,3 @@ public class Client{
         catch(ArrayIndexOutOfBoundsException e) { e.printStackTrace(); }
     }	
 }
-
