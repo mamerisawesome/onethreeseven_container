@@ -6,7 +6,6 @@ public class Server{
    private static ServerSocket serverSocket;
    public Server (int port) throws IOException {
       serverSocket = new ServerSocket(port);
-      // serverSocket.setSoTimeout(100000);
    }
 
    public static void main (String [] args) {

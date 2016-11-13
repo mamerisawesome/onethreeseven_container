@@ -1,0 +1,8 @@
+{
+  "version": "0.1.0",
+  "command": "grunt",
+  "args": [],
+  "showOutput": "always",
+  "isShellCommand": true,
+  "tasks": []
+}
