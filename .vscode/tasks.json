@@ -1,16 +1,8 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
   "version": "0.1.0",
   "command": "grunt",
   "args": [],
   "showOutput": "always",
   "isShellCommand": true,
-  "tasks": [
-    // {
-    //   "taskName": "setup_project",
-    //   "suppressTaskName": true,
-    //   "args": []
-    // }
-  ]
+  "tasks": []
 }
