@@ -2,8 +2,17 @@
 
 ## Requirements
 - Grunt
+```sh
+sudo apt-get install grunt-cli
+```
 - Java 1.7 or higher
+```sh
+sudo apt-get install java
+```
 - Visual Studio Code
+```sh
+sudo wget http://go.microsoft.com/fwlink/?LinkID=534108 
+```
 
 ## Taskrunners Available
 
