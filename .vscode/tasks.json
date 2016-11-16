@@ -4,5 +4,15 @@
   "args": [],
   "showOutput": "always",
   "isShellCommand": true,
-  "tasks": []
+  "tasks": [
+    {
+      "taskName": "client_start"
+    }, {
+      "taskName": "jarify_client"
+    }, {
+      "taskName": "server_start"
+    }, {
+      "taskName": "jarify_server"
+    }
+  ]
 }
