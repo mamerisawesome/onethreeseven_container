@@ -3,14 +3,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Client_State{
+public class Game_State{
   private Map players=new HashMap();
 
-  public Client_State(){
+  public Game_State(){
     // do nothing
   }
 
-  public void update(String name, Player player){
+  public void update(String name, Game_Player player){
     players.put(name,player);
   }
 
@@ -18,7 +18,7 @@ public class Client_State{
     String retval="";
     for(Iterator ite=players.keySet().iterator();ite.hasNext();){
       String name=(String)ite.next();
-      Player player=(Player)players.get(name);
+      Game_Player player=(Game_Player)players.get(name);
       retval+=player.toString()+":";
     }
     return retval;

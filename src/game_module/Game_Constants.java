@@ -1,5 +1,5 @@
 // @author Joseph Anthony C. Hermocilla
-public interface Client_Constants {
+public interface Game_Constants {
 	public static final String APP_NAME="Shot!";
 
 	public static final int GAME_START=0;
@@ -7,5 +7,5 @@ public interface Client_Constants {
 	public final int GAME_END=2;
 	public final int WAITING_FOR_PLAYERS=3;
 
-	public static final int PORT=8181;
+	public static final int PORT=8080;
 }

@@ -54,22 +54,44 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
-  grunt.registerTask("server_start", "Starts Server", function () {
+  // CHAT TASKS
+  grunt.registerTask("schat", "Starts Chat Server", function () {
     sh.exec("mkdir -p bin");
     sh.exec("mkdir -p bin/chat_server");
-    sh.exec("javac src/chat_module/Server.java -d bin/chat_server");
+    sh.exec("javac src/chat_module/Server*.java -d bin/chat_server");
     sh.cd("bin/chat_server");
-    sh.exec("java Server");
+    sh.exec("java Server 8080");
   });
   
-  grunt.registerTask("client_start", "Starts Client", function () {
+  grunt.registerTask("cchat", "Starts Chat Client", function () {
     sh.exec("mkdir -p bin");
     sh.exec("mkdir -p bin/chat_server");
     sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
     sh.cd("bin/chat_client");
     sh.exec("java Client");
   });
+
+  // GAME TASKS
+  var addr = grunt.option("addr");
+  var name = grunt.option("name");
+  var nump = grunt.option("nump");
+  grunt.registerTask("sgame", "Starts Server Game", function () {
+    sh.exec("mkdir -p bin");
+    sh.exec("mkdir -p bin/game_server");
+    sh.exec("javac src/game_module/Server.java src/game_module/Game*.java -d bin/game_server");
+    sh.cd("bin/game_server");
+    sh.exec("java Server " + nump);
+  });
   
+  grunt.registerTask("cgame", "Starts Client Game", function () {
+    sh.exec("mkdir -p bin");
+    sh.exec("mkdir -p bin/game_client");
+    sh.exec("javac src/game_module/Client.java src/game_module/Game*.java -d bin/game_client");
+    sh.cd("bin/game_client");
+    sh.exec("java Client " + addr + " " + name);
+  });
+  
+  // JAR TASKS
   grunt.registerTask("jarify_server", "Starts Server", function () {
     sh.exec("mkdir -p bin");
     sh.exec("mkdir -p bin/chat_server");

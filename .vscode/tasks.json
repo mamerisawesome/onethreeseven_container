@@ -6,11 +6,15 @@
   "isShellCommand": true,
   "tasks": [
     {
-      "taskName": "client_start"
+      "taskName": "schat"
+    }, {
+      "taskName": "cchat"
+    }, {
+      "taskName": "sgame"
+    }, {
+      "taskName": "cgame"
     }, {
       "taskName": "jarify_client"
-    }, {
-      "taskName": "server_start"
     }, {
       "taskName": "jarify_server"
     }

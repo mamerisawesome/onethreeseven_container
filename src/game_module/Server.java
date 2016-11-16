@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Server implements Runnable, Constants{
+public class Server implements Runnable, Game_Constants{
   String playerData; // data recvd by player
   int playerCount=0;
   DatagramSocket serverSocket = null;
-  GameState game; // game instance
+  Game_State game; // game instance
   int gameStage=WAITING_FOR_PLAYERS;
   int numPlayers;
   Thread t = new Thread(this); // game thread
@@ -27,7 +27,7 @@ public class Server implements Runnable, Constants{
       System.out.print("[OOPS] ");
       e.printStackTrace();
     }
-    game = new GameState();
+    game = new Game_State();
 
     System.out.print("[DONE] ");
     System.out.println("Game created...");
@@ -38,12 +38,12 @@ public class Server implements Runnable, Constants{
   public void broadcast(String msg){
     for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
       String name=(String)ite.next();
-      Player player=(Player)game.getPlayers().get(name);
+      Game_Player player=(Game_Player)game.getPlayers().get(name);
       send(player,msg);
     }
   }
 
-  public void send(Player player, String msg){
+  public void send(Game_Player player, String msg){
     DatagramPacket packet;
     byte buf[] = msg.getBytes();
     packet = new DatagramPacket(buf, buf.length, player.getAddress(),player.getPort());
@@ -69,7 +69,7 @@ public class Server implements Runnable, Constants{
           case WAITING_FOR_PLAYERS:
             if (playerData.startsWith("CONNECT")){
               String tokens[] = playerData.split(" ");
-              Player player=new Player(tokens[1],packet.getAddress(),packet.getPort());
+              Game_Player player=new Game_Player(tokens[1],packet.getAddress(),packet.getPort());
               System.out.println("Player connected: "+tokens[1]);
               game.update(tokens[1].trim(),player);
               broadcast("CONNECTED "+tokens[1]);
@@ -91,7 +91,7 @@ public class Server implements Runnable, Constants{
               int x = Integer.parseInt(playerInfo[2].trim());
               int y = Integer.parseInt(playerInfo[3].trim());
 
-              Player player=(Player)game.getPlayers().get(pname);
+              Game_Player player=(Game_Player)game.getPlayers().get(pname);
               player.setX(x);
               player.setY(y);
 
@@ -105,6 +105,7 @@ public class Server implements Runnable, Constants{
 
   public static void main(String args[]){
     if (args.length != 1){
+      System.out.println("Params: <number of players>");
       System.exit(1);
     }
 

@@ -1,13 +1,13 @@
 // @author Joseph Anthony C. Hermocilla
 import java.net.InetAddress;
 
-public class Client_Player {
+public class Game_Player {
   private InetAddress address;
   private int port;
   private String name;
   private int x,y;
 
-  public Client_Player(String name,InetAddress address, int port){
+  public Game_Player(String name,InetAddress address, int port){
     this.address = address;
     this.port = port;
     this.name = name;

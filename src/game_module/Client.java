@@ -14,7 +14,7 @@ import java.net.InetAddress;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Client extends JPanel implements Runnable, Constants{
+public class Client extends JPanel implements Runnable, Game_Constants{
   JFrame frame= new JFrame();
   int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY; // player init
   Thread t=new Thread(this);
@@ -130,6 +130,7 @@ public class Client extends JPanel implements Runnable, Constants{
 
   public static void main(String args[]) throws Exception{
     if (args.length != 2){
+      System.out.println("Params: <server> <player name>");
       System.exit(1);
     }
 
