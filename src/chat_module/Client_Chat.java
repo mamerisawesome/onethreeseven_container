@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-public class Chat extends JFrame{
+public class Client_Chat extends JFrame{
 
 	private JPanel contentPane;
 	private JTextField inputField;
@@ -34,7 +34,7 @@ public class Chat extends JFrame{
 	 * Create the frame.
 	 */
 	
-    public Chat() {
+    public Client_Chat() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 706, 491);

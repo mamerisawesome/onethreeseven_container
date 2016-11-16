@@ -33,7 +33,7 @@ module.exports = function(grunt) {
           cwd: "."
         }, 
         command: "javac",
-        sourceFiles: ["src/chat_module/Client.java", "src/chat_module/Chat.java"],
+        sourceFiles: ["src/chat_module/Client.java", "src/chat_module/Client_Chat.java"],
         javaOptions: {
           "d": "./bin/chat_client"
         },
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
   grunt.registerTask("client_start", "Starts Client", function () {
     sh.exec("mkdir -p bin");
     sh.exec("mkdir -p bin/chat_server");
-    sh.exec("javac src/chat_module/Client.java src/chat_module/Chat.java -d bin/chat_client");
+    sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
     sh.cd("bin/chat_client");
     sh.exec("java Client");
   });
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
     sh.exec("mkdir -p bin/chat_server");
     sh.exec("mkdir -p output");
 
-    sh.exec("javac src/chat_module/Client.java src/chat_module/Chat.java -d bin/chat_client");
+    sh.exec("javac src/chat_module/Client.java src/chat_module/Client_Chat.java -d bin/chat_client");
 
     sh.cd("bin/chat_client");
     sh.exec("jar cvfm ../../output/Client.jar ../../manifest/MANIFEST_client.txt *.class");
