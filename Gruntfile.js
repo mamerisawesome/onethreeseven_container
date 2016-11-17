@@ -33,7 +33,7 @@ module.exports = function(grunt) {
           cwd: "."
         }, 
         command: "javac",
-        sourceFiles: ["src/chat_module/Client.java", "src/chat_module/Chat.java"],
+        sourceFiles: ["src/chat_module/Client.java", "src/chat_module/Client_Chat.java"],
         javaOptions: {
           "d": "./bin/chat_client"
         },
@@ -54,22 +54,61 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
-  grunt.registerTask("server_start", "Starts Server", function () {
-    sh.exec("mkdir -p bin");
-    sh.exec("mkdir -p bin/chat_server");
-    sh.exec("javac src/chat_module/Server.java -d bin/chat_server");
-    sh.cd("bin/chat_server");
-    sh.exec("java Server");
+  // CHAT TASKS
+  var port = grunt.option("port");
+  var addr = grunt.option("addr");
+  var nump = grunt.option("nump");
+  var name = grunt.option("name");
+  grunt.registerTask("schat", "Starts Chat Server", function () {
+    if (port == undefined) {
+      sh.echo("[OOPS] Usage: grunt schat --port=port_number");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/chat_server");
+      sh.exec("javac src/chat_module/Server*.java -d bin/chat_server");
+      sh.cd("bin/chat_server");
+      sh.exec("java Server " + port);
+    }
   });
   
-  grunt.registerTask("client_start", "Starts Client", function () {
-    sh.exec("mkdir -p bin");
-    sh.exec("mkdir -p bin/chat_server");
-    sh.exec("javac src/chat_module/Client.java src/chat_module/Chat.java -d bin/chat_client");
-    sh.cd("bin/chat_client");
-    sh.exec("java Client");
+  grunt.registerTask("cchat", "Starts Chat Client", function () {
+    if (addr == undefined || port == undefined) {
+      sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --port=port_number");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/chat_server");
+      sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
+      sh.cd("bin/chat_client");
+      sh.exec("java Client " + addr + " " + port);
+    }
+  });
+
+  // GAME TASKS
+  grunt.registerTask("sgame", "Starts Server Game", function () {
+    if (nump == undefined) {
+      sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/game_server");
+      sh.exec("javac src/game_module/Server.java src/game_module/Game*.java -d bin/game_server");
+      sh.cd("bin/game_server");
+      sh.exec("java Server " + nump);
+    }
   });
   
+  grunt.registerTask("cgame", "Starts Client Game", function () {
+    if (addr == undefined || name == undefined) {
+      sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/game_client");
+      sh.exec("javac src/game_module/Client.java src/game_module/Game*.java -d bin/game_client");
+      sh.cd("bin/game_client");
+      sh.exec("java Client " + addr + " " + name);
+    }
+  });
+  
+  // JAR TASKS
   grunt.registerTask("jarify_server", "Starts Server", function () {
     sh.exec("mkdir -p bin");
     sh.exec("mkdir -p bin/chat_server");
@@ -86,7 +125,7 @@ module.exports = function(grunt) {
     sh.exec("mkdir -p bin/chat_server");
     sh.exec("mkdir -p output");
 
-    sh.exec("javac src/chat_module/Client.java src/chat_module/Chat.java -d bin/chat_client");
+    sh.exec("javac src/chat_module/Client.java src/chat_module/Client_Chat.java -d bin/chat_client");
 
     sh.cd("bin/chat_client");
     sh.exec("jar cvfm ../../output/Client.jar ../../manifest/MANIFEST_client.txt *.class");
