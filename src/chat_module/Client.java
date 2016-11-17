@@ -21,6 +21,7 @@ public class Client {
     try {
       String serverName = args[0]; //get IP address of server from first param
       int port = Integer.parseInt(args[1]); //get port from second param
+      final String name = args[2]; //get port from second param
 
       /* Open a ClientSocket and connect to ServerSocket */
       System.out.println("Connecting to " + serverName + " on port " + port);
@@ -34,7 +35,7 @@ public class Client {
       chatBox.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try{
-            out.writeUTF("Client " + client.getLocalSocketAddress()+" says: " +chatBox.getText());
+            out.writeUTF(name + ": " +chatBox.getText());
             chatBox.setText("");
           } catch(Exception er){
             er.printStackTrace();

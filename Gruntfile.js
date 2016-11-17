@@ -79,7 +79,7 @@ module.exports = function(grunt) {
       sh.exec("mkdir -p bin/chat_server");
       sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
       sh.cd("bin/chat_client");
-      sh.exec("java Client " + addr + " " + port);
+      sh.exec("java Client " + addr + " " + port + " " + name);
     }
   });
 
