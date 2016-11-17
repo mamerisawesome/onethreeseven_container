@@ -34,10 +34,24 @@ Before starting the project, initialize the modules and directories necessary fo
 grunt exec
 ```
 
-### Source Compilation
-To compile all java files within the project, use the 'run_java' task. This task also starts the server on port 8080.
+### Start server for chat
 ```grunt
-grunt run_java
+grunt schat --port=port_number
+```
+
+### Start client for chat
+```grunt
+grunt cchat --addr=address_of_server --port=port_number
+```
+
+### Start server for game
+```grunt
+grunt sgame --nump=number_of_players
+```
+
+### Start client for game
+```grunt
+grunt cgame --addr=address_of_server --name=name_of_player
 ```
 
 ### Grunt Testing
