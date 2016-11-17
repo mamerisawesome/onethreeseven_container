@@ -72,23 +72,31 @@ module.exports = function(grunt) {
   });
 
   // GAME TASKS
-  var addr = grunt.option("addr");
-  var name = grunt.option("name");
   var nump = grunt.option("nump");
   grunt.registerTask("sgame", "Starts Server Game", function () {
-    sh.exec("mkdir -p bin");
-    sh.exec("mkdir -p bin/game_server");
-    sh.exec("javac src/game_module/Server.java src/game_module/Game*.java -d bin/game_server");
-    sh.cd("bin/game_server");
-    sh.exec("java Server " + nump);
+    if (nump == undefined) {
+      sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/game_server");
+      sh.exec("javac src/game_module/Server.java src/game_module/Game*.java -d bin/game_server");
+      sh.cd("bin/game_server");
+      sh.exec("java Server " + nump);
+    }
   });
   
+  var addr = grunt.option("addr");
+  var name = grunt.option("name");
   grunt.registerTask("cgame", "Starts Client Game", function () {
-    sh.exec("mkdir -p bin");
-    sh.exec("mkdir -p bin/game_client");
-    sh.exec("javac src/game_module/Client.java src/game_module/Game*.java -d bin/game_client");
-    sh.cd("bin/game_client");
-    sh.exec("java Client " + addr + " " + name);
+    if (addr == undefined || name == undefined) {
+      sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/game_client");
+      sh.exec("javac src/game_module/Client.java src/game_module/Game*.java -d bin/game_client");
+      sh.cd("bin/game_client");
+      sh.exec("java Client " + addr + " " + name);
+    }
   });
   
   // JAR TASKS
