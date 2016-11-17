@@ -53,7 +53,7 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
-  
+
   // CHAT TASKS
   var port = grunt.option("port");
   var addr = grunt.option("addr");
