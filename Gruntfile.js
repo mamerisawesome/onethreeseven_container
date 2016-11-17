@@ -1,5 +1,4 @@
 module.exports = function(grunt) {
-
   grunt.initConfig({
     exec: {
       setup_project: {
@@ -54,6 +53,7 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
+  
   // CHAT TASKS
   var port = grunt.option("port");
   var addr = grunt.option("addr");
