@@ -55,24 +55,35 @@ module.exports = function(grunt) {
 
   var sh = require("shelljs");
   // CHAT TASKS
+  var port = grunt.option("port");
+  var addr = grunt.option("addr");
+  var nump = grunt.option("nump");
+  var name = grunt.option("name");
   grunt.registerTask("schat", "Starts Chat Server", function () {
-    sh.exec("mkdir -p bin");
-    sh.exec("mkdir -p bin/chat_server");
-    sh.exec("javac src/chat_module/Server*.java -d bin/chat_server");
-    sh.cd("bin/chat_server");
-    sh.exec("java Server 8080");
+    if (port == undefined) {
+      sh.echo("[OOPS] Usage: grunt schat --port=port_number");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/chat_server");
+      sh.exec("javac src/chat_module/Server*.java -d bin/chat_server");
+      sh.cd("bin/chat_server");
+      sh.exec("java Server " + port);
+    }
   });
   
   grunt.registerTask("cchat", "Starts Chat Client", function () {
-    sh.exec("mkdir -p bin");
-    sh.exec("mkdir -p bin/chat_server");
-    sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
-    sh.cd("bin/chat_client");
-    sh.exec("java Client");
+    if (addr == undefined || port == undefined) {
+      sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --port=port_number");
+    } else {
+      sh.exec("mkdir -p bin");
+      sh.exec("mkdir -p bin/chat_server");
+      sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
+      sh.cd("bin/chat_client");
+      sh.exec("java Client " + addr + " " + port);
+    }
   });
 
   // GAME TASKS
-  var nump = grunt.option("nump");
   grunt.registerTask("sgame", "Starts Server Game", function () {
     if (nump == undefined) {
       sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
@@ -85,8 +96,6 @@ module.exports = function(grunt) {
     }
   });
   
-  var addr = grunt.option("addr");
-  var name = grunt.option("name");
   grunt.registerTask("cgame", "Starts Client Game", function () {
     if (addr == undefined || name == undefined) {
       sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
