@@ -89,9 +89,9 @@ module.exports = function(grunt) {
       sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
     } else {
       sh.exec("mkdir -p bin");
-      sh.exec("mkdir -p bin/game_server");
-      sh.exec("javac src/game_module/Server.java src/game_module/Game*.java -d bin/game_server");
-      sh.cd("bin/game_server");
+      sh.exec("mkdir -p bin/game");
+      sh.exec("javac src/game_module/*.java -d bin/game");
+      sh.cd("bin/game");
       sh.exec("java Server " + nump);
     }
   });
@@ -101,9 +101,9 @@ module.exports = function(grunt) {
       sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
     } else {
       sh.exec("mkdir -p bin");
-      sh.exec("mkdir -p bin/game_client");
-      sh.exec("javac src/game_module/Client.java src/game_module/Game*.java -d bin/game_client");
-      sh.cd("bin/game_client");
+      sh.exec("mkdir -p bin/game");
+      sh.exec("javac src/game_module/*.java -d bin/game");
+      sh.cd("bin/game");
       sh.exec("java Client " + addr + " " + name);
     }
   });

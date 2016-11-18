@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 
 public class Client extends JPanel implements Runnable, Game_Constants{
   JFrame frame= new JFrame();
-  int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY; // player init
+  int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY;
   Thread t=new Thread(this);
-  String name="Milky Cow";
+  String name="Joseph";
   String pname;
   String server="localhost";
   boolean connected=false;
@@ -31,6 +31,7 @@ public class Client extends JPanel implements Runnable, Game_Constants{
     this.name=name;
 
     frame.setTitle(APP_NAME+":"+name);
+    socket.setSoTimeout(100);
 
     frame.getContentPane().add(this);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,41 +60,38 @@ public class Client extends JPanel implements Runnable, Game_Constants{
     while(true){
       try{
         Thread.sleep(1);
-      } catch(Exception e){
-        e.printStackTrace();
-      }
+      }catch(Exception ioe){}
 
       byte[] buf = new byte[256];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
            socket.receive(packet);
-      }catch(Exception e){
-        e.printStackTrace();
+      }catch(Exception ioe){
+        // do nothing
       }
 
       serverData=new String(buf);
       serverData=serverData.trim();
 
-      if (!connected && serverData.startsWith("CONNECTED")){
+      if (!connected && serverData.startsWith("CONNECTED")) {
         connected=true;
         System.out.println("Connected.");
-      }else if (!connected){
+      } else if (!connected) {
         System.out.println("Connecting..");
         send("CONNECT "+name);
-      }else if (connected){
+      } else if (connected) {
         offscreen.getGraphics().clearRect(0, 0, 640, 480);
-        if (serverData.startsWith("PLAYER")){
+        if (serverData.startsWith("PLAYER")) {
           String[] playersInfo = serverData.split(":");
-          for (int i=0;i<playersInfo.length;i++){
+          for (int i=0;i<playersInfo.length;i++) {
             String[] playerInfo = playersInfo[i].split(" ");
             String pname =playerInfo[1];
             int x = Integer.parseInt(playerInfo[2]);
             int y = Integer.parseInt(playerInfo[3]);
-            //draw on the offscreen image
+
             offscreen.getGraphics().fillOval(x, y, 20, 20);
             offscreen.getGraphics().drawString(pname,x-10,y+30);
           }
-          //show the changes
           frame.repaint();
         }
       }
@@ -130,7 +128,7 @@ public class Client extends JPanel implements Runnable, Game_Constants{
 
   public static void main(String args[]) throws Exception{
     if (args.length != 2){
-      System.out.println("Params: <server> <player name>");
+      System.out.println("Usage: java -jar circlewars-client <server> <player name>");
       System.exit(1);
     }
 
