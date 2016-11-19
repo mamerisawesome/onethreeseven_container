@@ -64,7 +64,6 @@ module.exports = function(grunt) {
     if (port == undefined) {
       sh.echo("[OOPS] Usage: grunt schat --port=port_number");
     } else {
-      sh.exec("cp lib bin")
       sh.exec("javac src/com/chat_module/Server*.java -d .");
       sh.exec("java bin/com/chat_module/Server " + port);
     }

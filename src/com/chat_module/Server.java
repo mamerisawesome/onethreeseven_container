@@ -1,6 +1,5 @@
 package bin.com.chat_module;
 
-import lib.slick.slick;
 import java.net.*;
 import java.io.*;
 import java.util.*;
