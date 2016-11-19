@@ -6,7 +6,6 @@ module.exports = function(grunt) {
         stderr: true,
         command: [
           "mkdir -p bin",
-          "cp lib bin",
           "npm install"
         ].join(" && ")
       }
@@ -54,6 +53,7 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
+  sh.cp("-r", "src/lib", ["bin"]);
 
   // CHAT TASKS
   var port = grunt.option("port");
@@ -61,7 +61,7 @@ module.exports = function(grunt) {
   var nump = grunt.option("nump");
   var name = grunt.option("name");
   grunt.registerTask("schat", "Starts Chat Server", function () {
-    if (port == undefined) {
+    if (!port) {
       sh.echo("[OOPS] Usage: grunt schat --port=port_number");
     } else {
       sh.exec("javac src/com/chat_module/Server*.java -d .");
@@ -70,10 +70,9 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask("cchat", "Starts Chat Client", function () {
-    if (addr == undefined || port == undefined) {
+    if (!addr || !port || !name) {
       sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --port=port_number");
     } else {
-      sh.exec("cp lib bin")
       sh.exec("javac src/com/chat_module/Client*.java -d .");
       sh.exec("java bin/com/chat_module/Client " + addr + " " + port + " " + name);
     }
@@ -81,20 +80,18 @@ module.exports = function(grunt) {
 
   // GAME TASKS
   grunt.registerTask("sgame", "Starts Server Game", function () {
-    if (nump == undefined) {
+    if (!nump) {
       sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
     } else {
-      sh.exec("cp lib bin")
       sh.exec("javac src/com/game_module/Server.java src/com/game_module/Game*.java -d .");
       sh.exec("java bin/com/game_module/Server " + nump);
     }
   });
 
   grunt.registerTask("cgame", "Starts Client Game", function () {
-    if (addr == undefined || name == undefined) {
+    if (!addr || !name) {
       sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
     } else {
-      sh.exec("cp lib bin")
       sh.exec("javac src/com/game_module/Client.java src/com/game_module/Game*.java -d .");
       sh.exec("java bin/com/game_module/Client " + addr + " " + name);
     }
