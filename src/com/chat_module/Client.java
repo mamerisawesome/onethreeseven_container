@@ -13,6 +13,8 @@ public class Client implements Chat_Constants {
     final JTextArea messageBox = new JTextArea();
     final JTextField chatBox = new JTextField();
     messageBox.setEnabled(false);
+    messageBox.setBackground(new Color(50, 50, 50));
+    messageBox.setForeground(Color.GREEN);
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(messageBox, BorderLayout.CENTER);
     panel.add(chatBox, BorderLayout.SOUTH);
@@ -33,6 +35,7 @@ public class Client implements Chat_Constants {
       OutputStream outToServer = client.getOutputStream();
       final DataOutputStream out = new DataOutputStream(outToServer);	
 
+      chatBox.setForeground(Color.BLACK);
       chatBox.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           try{
