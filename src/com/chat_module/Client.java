@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Client {
+public class Client implements Chat_Constants {
   public static void main (String [] args) {
     JFrame frame = new JFrame("Chat");
     final JTextArea messageBox = new JTextArea();
@@ -22,13 +22,12 @@ public class Client {
 
     try {
       String serverName = args[0]; //get IP address of server from first param
-      int port = Integer.parseInt(args[1]); //get port from second param
-      final String name = args[2]; //get port from second param
+      final String name = args[1]; //get port from second param
 
       /* Open a ClientSocket and connect to ServerSocket */
-      System.out.println("Connecting to " + serverName + " on port " + port);
+      System.out.println("Connecting to " + serverName + " on port " + PORT);
       //insert missing line here for creating a new socket for client and binding it to a port
-      final Socket client = new Socket(serverName, port);			
+      final Socket client = new Socket(serverName, PORT);			
       System.out.println("Just connected to " + client.getRemoteSocketAddress());
       /* Send data to the ServerSocket */
       OutputStream outToServer = client.getOutputStream();
@@ -63,7 +62,7 @@ public class Client {
     } catch(IOException e) {
       System.out.println("Cannot find Server");
     } catch (ArrayIndexOutOfBoundsException e) {
-      System.out.println("Usage: java Client <server ip> <port no.>");
+      System.out.println("Usage: java Client <server ip> <name>");
     }
   }
 }

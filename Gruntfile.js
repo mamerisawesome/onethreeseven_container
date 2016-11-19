@@ -53,7 +53,7 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
-  sh.cp("-r", "src/lib", ["bin"]);
+  sh.cp("-r", "lib", ["bin"]);
 
   // CHAT TASKS
   var port = grunt.option("port");
@@ -61,20 +61,16 @@ module.exports = function(grunt) {
   var nump = grunt.option("nump");
   var name = grunt.option("name");
   grunt.registerTask("schat", "Starts Chat Server", function () {
-    if (!port) {
-      sh.echo("[OOPS] Usage: grunt schat --port=port_number");
-    } else {
-      sh.exec("javac src/com/chat_module/Server*.java -d .");
-      sh.exec("java bin/com/chat_module/Server " + port);
-    }
+    sh.exec("javac src/com/chat_module/Server*.java src/com/chat_module/Chat*.java -d .");
+    sh.exec("java bin/com/chat_module/Server");
   });
 
   grunt.registerTask("cchat", "Starts Chat Client", function () {
-    if (!addr || !port || !name) {
-      sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --port=port_number");
+    if (!addr || !name) {
+      sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --name=name_of_user");
     } else {
-      sh.exec("javac src/com/chat_module/Client*.java -d .");
-      sh.exec("java bin/com/chat_module/Client " + addr + " " + port + " " + name);
+      sh.exec("javac src/com/chat_module/Client*.java src/com/chat_module/Chat*.java -d .");
+      sh.exec("java bin/com/chat_module/Client " + addr + " " + name);
     }
   });
 

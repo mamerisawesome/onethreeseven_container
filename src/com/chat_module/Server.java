@@ -4,16 +4,15 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Server {
+public class Server implements Chat_Constants {
   private static ServerSocket serverSocket;
-  public Server (int port) throws IOException {
-    serverSocket = new ServerSocket(port);
+  public Server () throws IOException {
+    serverSocket = new ServerSocket(PORT);
   }
 
   public static void main (String [] args) {
     try {
-    int port = Integer.parseInt(args[0]);
-    Server gs = new Server(port);
+    Server gs = new Server();
     Thread accept = new Thread () {
       public void run () {
         try {
@@ -45,12 +44,12 @@ public class Server {
       }
     };
 
-    accept.start();    
+    accept.start();
 
     } catch (IOException e) {
-      System.out.println("Usage: java Server <port no.>");
+      System.out.println("Usage: java Server");
     } catch (ArrayIndexOutOfBoundsException e) {
-      System.out.println("Usage: java Server <port no.> ");
+      System.out.println("Usage: java Server");
     }
   }
 }
