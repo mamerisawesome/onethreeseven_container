@@ -1,6 +1,8 @@
 // @ref Joseph Anthony C. Hermocilla
 package bin.com.game_module;
 
+import java.awt.Dimension;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,8 +18,7 @@ import java.net.InetAddress;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Client extends JPanel implements Runnable, Game_Constants{
-  JFrame frame= new JFrame();
+public class Client_Game extends JPanel implements Runnable, Game_Constants{
   int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY;
   Thread t=new Thread(this);
   String name="Almer";
@@ -27,23 +28,18 @@ public class Client extends JPanel implements Runnable, Game_Constants{
   DatagramSocket socket = new DatagramSocket();
   String serverData;
   BufferedImage offscreen;
+  int gwidth  = 1000;
+  int gheight = 500; 
 
-  public Client(String server,String name) throws Exception{
+  public Client_Game (String server,String name) throws Exception{
     this.server=server;
     this.name=name;
 
-    frame.setTitle(APP_NAME+":"+name);
     socket.setSoTimeout(100);
 
-    frame.getContentPane().add(this);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(640, 480);
-    frame.setVisible(true);
-
-    offscreen=(BufferedImage)this.createImage(640, 480);
-
-    frame.addKeyListener(new KeyHandler());
-    frame.addMouseMotionListener(new MouseMotionHandler());
+    this.setPreferredSize(new Dimension(gwidth, gheight));
+    this.addKeyListener(new KeyHandler());
+    this.addMouseMotionListener(new MouseMotionHandler());
 
     t.start();
   }
@@ -51,12 +47,12 @@ public class Client extends JPanel implements Runnable, Game_Constants{
   public void send(String msg){
     try{
       byte[] buf = msg.getBytes();
-          InetAddress address = InetAddress.getByName(server);
-          DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
-          socket.send(packet);
-        } catch (Exception e) {
-          // do nothing
-        }
+        InetAddress address = InetAddress.getByName(server);
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
+        socket.send(packet);
+      } catch (Exception e) {
+        // do nothing
+      }
   }
 
   public void run(){
@@ -68,7 +64,7 @@ public class Client extends JPanel implements Runnable, Game_Constants{
       byte[] buf = new byte[256];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
-           socket.receive(packet);
+        socket.receive(packet);
       }catch(Exception ioe){
         // do nothing
       }
@@ -76,6 +72,7 @@ public class Client extends JPanel implements Runnable, Game_Constants{
       serverData=new String(buf);
       serverData=serverData.trim();
 
+      offscreen = (BufferedImage) this.createImage(gwidth, gheight);
       if (!connected && serverData.startsWith("CONNECTED")) {
         connected=true;
         System.out.println("Connected.");
@@ -83,7 +80,7 @@ public class Client extends JPanel implements Runnable, Game_Constants{
         System.out.println("Connecting..");
         send("CONNECT "+name);
       } else if (connected) {
-        offscreen.getGraphics().clearRect(0, 0, 640, 480);
+        offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
         if (serverData.startsWith("PLAYER")) {
           String[] playersInfo = serverData.split(":");
           for (int i=0;i<playersInfo.length;i++) {
@@ -93,9 +90,10 @@ public class Client extends JPanel implements Runnable, Game_Constants{
             int y = Integer.parseInt(playerInfo[3]);
 
             offscreen.getGraphics().fillOval(x, y, 20, 20);
+            offscreen.getGraphics().setColor(Color.BLUE);
             offscreen.getGraphics().drawString(pname,x-10,y+30);
           }
-          frame.repaint();
+          this.repaint();
         }
       }
     }
@@ -118,23 +116,14 @@ public class Client extends JPanel implements Runnable, Game_Constants{
     public void keyPressed(KeyEvent ke){
       prevX=x;prevY=y;
       switch (ke.getKeyCode()){
-      case KeyEvent.VK_DOWN:y+=yspeed;break;
-      case KeyEvent.VK_UP:y-=yspeed;break;
-      case KeyEvent.VK_LEFT:x-=xspeed;break;
-      case KeyEvent.VK_RIGHT:x+=xspeed;break;
+        case KeyEvent.VK_DOWN:y+=yspeed;break;
+        case KeyEvent.VK_UP:y-=yspeed;break;
+        case KeyEvent.VK_LEFT:x-=xspeed;break;
+        case KeyEvent.VK_RIGHT:x+=xspeed;break;
       }
       if (prevX != x || prevY != y){
         send("PLAYER "+name+" "+x+" "+y);
       }
     }
-  }
-
-  public static void main(String args[]) throws Exception{
-    if (args.length != 2){
-      System.out.println("Usage: java -jar circlewars-client <server> <player name>");
-      System.exit(1);
-    }
-
-    new Client(args[0],args[1]);
   }
 }

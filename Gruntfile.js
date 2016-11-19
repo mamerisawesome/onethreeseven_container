@@ -53,44 +53,38 @@ module.exports = function(grunt) {
   });
 
   var sh = require("shelljs");
-  sh.cp("-r", "lib", ["bin"]);
-
-  // CHAT TASKS
   var port = grunt.option("port");
   var addr = grunt.option("addr");
   var nump = grunt.option("nump");
   var name = grunt.option("name");
-  grunt.registerTask("schat", "Starts Chat Server", function () {
-    sh.exec("javac src/com/chat_module/Server*.java src/com/chat_module/Chat*.java -d .");
-    sh.exec("java bin/com/chat_module/Server");
-  });
+  sh.cp("-r", "lib", ["bin"]);
 
-  grunt.registerTask("cchat", "Starts Chat Client", function () {
-    if (!addr || !name) {
-      sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --name=name_of_user");
-    } else {
-      sh.exec("javac src/com/chat_module/Client*.java src/com/chat_module/Chat*.java -d .");
-      sh.exec("java bin/com/chat_module/Client " + addr + " " + name);
-    }
-  });
-
-  // GAME TASKS
-  grunt.registerTask("sgame", "Starts Server Game", function () {
+  grunt.registerTask("pserver", "Starts Server", function () {
     if (!nump) {
-      sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
-    } else {
-      sh.exec("javac src/com/game_module/Server.java src/com/game_module/Game*.java -d .");
-      sh.exec("java bin/com/game_module/Server " + nump);
+      return console.error("[OOPS] --nump missing");
     }
+
+    var modules = [
+      "src/com/chat_module/*.java",
+      "src/com/game_module/*.java",
+      "src/com/project/Server*.java"
+    ].join(" ");
+    sh.exec("javac " + modules + "  -d .");
+    sh.exec("java bin/com/project/Server " + nump);
   });
 
-  grunt.registerTask("cgame", "Starts Client Game", function () {
+  grunt.registerTask("pclient", "Starts Project", function () {
     if (!addr || !name) {
-      sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
-    } else {
-      sh.exec("javac src/com/game_module/Client.java src/com/game_module/Game*.java -d .");
-      sh.exec("java bin/com/game_module/Client " + addr + " " + name);
+      return console.error("[OOPS] --addr or --name missing");
     }
+
+    var modules = [
+      "src/com/chat_module/*.java",
+      "src/com/game_module/*.java",
+      "src/com/project/Screen*.java"
+    ].join(" ");
+    sh.exec("javac " + modules + "  -d .");
+    sh.exec("java bin/com/project/Screen " + addr + " " + name);
   });
 
   // JAR TASKS

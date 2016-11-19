@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Server implements Runnable, Game_Constants {
+public class Server_Game implements Runnable, Game_Constants {
   String playerData;
   int playerCount = 0;
   DatagramSocket serverSocket = null;
@@ -17,7 +17,7 @@ public class Server implements Runnable, Game_Constants {
   int numPlayers;
   Thread t = new Thread(this);
 
-  public Server (int numPlayers) {
+  public Server_Game (int numPlayers) {
     this.numPlayers = numPlayers;
     try {
       serverSocket = new DatagramSocket(PORT);
@@ -30,7 +30,7 @@ public class Server implements Runnable, Game_Constants {
     }
     game = new Game_State();
 
-    System.out.println("Game created...");
+    System.out.println("[DONE] Game created");
 
     t.start();
   }
@@ -104,16 +104,6 @@ public class Server implements Runnable, Game_Constants {
             break;
       }
     }
-  }
-
-
-  public static void main (String args[]) {
-    if (args.length != 1) {
-      System.out.println("Usage: java -jar circlewars-server <number of players>");
-      System.exit(1);
-    }
-
-    new Server(Integer.parseInt(args[0]));
   }
 }
 
