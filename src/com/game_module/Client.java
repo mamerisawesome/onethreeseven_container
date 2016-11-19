@@ -1,4 +1,6 @@
-// @author Joseph Anthony C. Hermocilla
+// @ref Joseph Anthony C. Hermocilla
+package bin.com.game_module;
+
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -18,7 +20,7 @@ public class Client extends JPanel implements Runnable, Game_Constants{
   JFrame frame= new JFrame();
   int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY;
   Thread t=new Thread(this);
-  String name="Joseph";
+  String name="Almer";
   String pname;
   String server="localhost";
   boolean connected=false;
@@ -52,8 +54,9 @@ public class Client extends JPanel implements Runnable, Game_Constants{
           InetAddress address = InetAddress.getByName(server);
           DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
           socket.send(packet);
-        }catch(Exception e){}
-
+        } catch (Exception e) {
+          // do nothing
+        }
   }
 
   public void run(){

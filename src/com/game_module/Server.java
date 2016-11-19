@@ -1,4 +1,6 @@
-// @author Joseph Anthony C. Hermocilla
+// @ref Joseph Anthony C. Hermocilla
+package bin.com.game_module;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

@@ -1,4 +1,6 @@
-// @author Joseph Anthony C. Hermocilla
+// @ref Joseph Anthony C. Hermocilla
+package bin.com.game_module;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

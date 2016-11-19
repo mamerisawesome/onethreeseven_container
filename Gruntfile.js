@@ -6,6 +6,7 @@ module.exports = function(grunt) {
         stderr: true,
         command: [
           "mkdir -p bin",
+          "cp lib bin",
           "npm install"
         ].join(" && ")
       }
@@ -20,9 +21,9 @@ module.exports = function(grunt) {
       compile_server: {
         execOptions:{
           cwd: "."
-        }, 
+        },
         command: "javac",
-        sourceFiles: ["src/chat_module/Server.java"],
+        sourceFiles: ["src/com/chat_module/Server.java"],
         javaOptions: {
           "d": "./bin/chat_server"
         },
@@ -30,9 +31,9 @@ module.exports = function(grunt) {
       compile_client: {
         execOptions:{
           cwd: "."
-        }, 
+        },
         command: "javac",
-        sourceFiles: ["src/chat_module/Client.java", "src/chat_module/Client_Chat.java"],
+        sourceFiles: ["src/com/chat_module/Client.java", "src/com/chat_module/Client_Chat.java"],
         javaOptions: {
           "d": "./bin/chat_client"
         },
@@ -63,23 +64,19 @@ module.exports = function(grunt) {
     if (port == undefined) {
       sh.echo("[OOPS] Usage: grunt schat --port=port_number");
     } else {
-      sh.exec("mkdir -p bin");
-      sh.exec("mkdir -p bin/chat_server");
-      sh.exec("javac src/chat_module/Server*.java -d bin/chat_server");
-      sh.cd("bin/chat_server");
-      sh.exec("java Server " + port);
+      sh.exec("cp lib bin")
+      sh.exec("javac src/com/chat_module/Server*.java -d .");
+      sh.exec("java bin/com/chat_module/Server " + port);
     }
   });
-  
+
   grunt.registerTask("cchat", "Starts Chat Client", function () {
     if (addr == undefined || port == undefined) {
       sh.echo("[OOPS] Usage: grunt cchat --addr=server_address --port=port_number");
     } else {
-      sh.exec("mkdir -p bin");
-      sh.exec("mkdir -p bin/chat_server");
-      sh.exec("javac src/chat_module/Client*.java -d bin/chat_client");
-      sh.cd("bin/chat_client");
-      sh.exec("java Client " + addr + " " + port + " " + name);
+      sh.exec("cp lib bin")
+      sh.exec("javac src/com/chat_module/Client*.java -d .");
+      sh.exec("java bin/com/chat_module/Client " + addr + " " + port + " " + name);
     }
   });
 
@@ -88,34 +85,30 @@ module.exports = function(grunt) {
     if (nump == undefined) {
       sh.echo("[OOPS] Usage: grunt sgame --nump=number_of_players");
     } else {
-      sh.exec("mkdir -p bin");
-      sh.exec("mkdir -p bin/game");
-      sh.exec("javac src/game_module/*.java -d bin/game");
-      sh.cd("bin/game");
-      sh.exec("java Server " + nump);
+      sh.exec("cp lib bin")
+      sh.exec("javac src/com/game_module/Server.java src/com/game_module/Game*.java -d .");
+      sh.exec("java bin/com/game_module/Server " + nump);
     }
   });
-  
+
   grunt.registerTask("cgame", "Starts Client Game", function () {
     if (addr == undefined || name == undefined) {
       sh.echo("[OOPS] Usage: grunt sgame --addr=address_of_server --name=name_of_player");
     } else {
-      sh.exec("mkdir -p bin");
-      sh.exec("mkdir -p bin/game");
-      sh.exec("javac src/game_module/*.java -d bin/game");
-      sh.cd("bin/game");
-      sh.exec("java Client " + addr + " " + name);
+      sh.exec("cp lib bin")
+      sh.exec("javac src/com/game_module/Client.java src/com/game_module/Game*.java -d .");
+      sh.exec("java bin/com/game_module/Client " + addr + " " + name);
     }
   });
-  
+
   // JAR TASKS
   grunt.registerTask("jarify_server", "Starts Server", function () {
     sh.exec("mkdir -p bin");
     sh.exec("mkdir -p bin/chat_server");
     sh.exec("mkdir -p output");
 
-    sh.exec("javac src/chat_module/Server.java -d bin/chat_server");
-    
+    sh.exec("javac src/com/chat_module/Server.java -d bin/chat_server");
+
     sh.cd("bin/chat_server");
     sh.exec("jar cvfm ../../output/Server.jar ../../manifest/MANIFEST_server.txt *.class");
   });
@@ -125,7 +118,7 @@ module.exports = function(grunt) {
     sh.exec("mkdir -p bin/chat_server");
     sh.exec("mkdir -p output");
 
-    sh.exec("javac src/chat_module/Client.java src/chat_module/Client_Chat.java -d bin/chat_client");
+    sh.exec("javac src/com/chat_module/Client.java src/com/chat_module/Client_Chat.java -d bin/chat_client");
 
     sh.cd("bin/chat_client");
     sh.exec("jar cvfm ../../output/Client.jar ../../manifest/MANIFEST_client.txt *.class");
