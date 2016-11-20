@@ -57,20 +57,32 @@ module.exports = function(grunt) {
   var addr = grunt.option("addr");
   var nump = grunt.option("nump");
   var name = grunt.option("name");
-  sh.cp("-r", "lib", ["bin"]);
+
+  var command = "javac";
+
+  var modules = [
+    "src/com/chat_module/*.java",
+    "src/com/game_module/*.java",
+    "src/com/project/*.java",
+  ].join(" ");
+
+  var lib = [
+    "-cp",
+    "\".;/lib/lwjgl/lwjgl.jar;/lib/slick/slick.jar\"",
+  ].join(" ");
+
+  var out = [
+    "-d ."
+  ].join(" ");
+
+  sh.exec([command, lib, modules, out].join(" "));
 
   grunt.registerTask("pserver", "Starts Server", function () {
     if (!nump) {
       return console.error("[OOPS] --nump missing");
     }
 
-    var modules = [
-      "src/com/chat_module/*.java",
-      "src/com/game_module/*.java",
-      "src/com/project/Server*.java"
-    ].join(" ");
-    sh.exec("javac " + modules + "  -d .");
-    sh.exec("java bin/com/project/Server " + nump);
+    sh.exec(["java", "bin/com/project/Server", nump].join(" "));
   });
 
   grunt.registerTask("pclient", "Starts Project", function () {
@@ -78,13 +90,7 @@ module.exports = function(grunt) {
       return console.error("[OOPS] --addr or --name missing");
     }
 
-    var modules = [
-      "src/com/chat_module/*.java",
-      "src/com/game_module/*.java",
-      "src/com/project/Screen*.java"
-    ].join(" ");
-    sh.exec("javac " + modules + "  -d .");
-    sh.exec("java bin/com/project/Screen " + addr + " " + name);
+    sh.exec(["java", "bin/com/project/Screen", addr, name].join(" "));
   });
 
   // JAR TASKS
