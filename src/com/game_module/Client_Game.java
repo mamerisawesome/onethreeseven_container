@@ -1,5 +1,5 @@
 // @ref Joseph Anthony C. Hermocilla
-package bin.com.game_module;
+package com.game_module;
 
 import java.awt.Dimension;
 import java.awt.Color;

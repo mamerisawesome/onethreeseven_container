@@ -1,5 +1,5 @@
 // @ref Joseph Anthony C. Hermocilla
-package bin.com.game_module;
+package com.game_module;
 
 public interface Game_Constants {
   public static final String APP_NAME="Shot!";

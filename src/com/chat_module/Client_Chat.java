@@ -1,4 +1,4 @@
-package bin.com.chat_module;
+package com.chat_module;
 
 import java.net.*;
 import java.io.*;
