@@ -100,6 +100,8 @@ public class Server_Game implements Runnable, Game_Constants {
 
               game.update(pname, player);
               broadcast(game.toString());
+            }else{
+            	broadcast(game.toString());
             }
             break;
       }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Game_State{
   private Map players=new HashMap();
-
+  int type=1, x=22, y=150;
   public Game_State(){
     // do nothing
   }
@@ -21,7 +21,10 @@ public class Game_State{
     for(Iterator ite=players.keySet().iterator();ite.hasNext();){
       String name=(String)ite.next();
       Game_Player player=(Game_Player)players.get(name);
-      retval+=player.toString()+":";
+      retval+=player.toString();
+      retval+=" "+Integer.toString(x+=4);
+      retval+=" "+Integer.toString(y+=2);
+      retval+=":";
     }
     return retval;
   }
