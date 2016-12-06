@@ -1,5 +1,5 @@
 // @ref Joseph Anthony C. Hermocilla
-package bin.com.game_module;
+package com.game_module;
 
 import java.awt.Dimension;
 import java.awt.Color;
@@ -88,8 +88,11 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             String pname =playerInfo[1];
             int x = Integer.parseInt(playerInfo[2]);
             int y = Integer.parseInt(playerInfo[3]);
+            int shapex = Integer.parseInt(playerInfo[4]);
+            int shapey = Integer.parseInt(playerInfo[5]);
 
             offscreen.getGraphics().fillOval(x, y, 20, 20);
+            offscreen.getGraphics().fillRect(shapex, shapey, 20, 20);
             offscreen.getGraphics().setColor(Color.BLUE);
             offscreen.getGraphics().drawString(pname,x-10,y+30);
           }

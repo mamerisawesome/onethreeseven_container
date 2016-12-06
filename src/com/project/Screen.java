@@ -1,7 +1,7 @@
-package bin.com.project;
+package com.project;
 
-import bin.com.chat_module.*;
-import bin.com.game_module.*;
+import com.chat_module.*;
+import com.game_module.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;

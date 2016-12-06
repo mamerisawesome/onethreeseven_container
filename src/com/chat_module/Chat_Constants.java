@@ -1,4 +1,4 @@
-package bin.com.chat_module;
+package com.chat_module;
 
 public interface Chat_Constants {
   public static final String APP_NAME="Shot!";

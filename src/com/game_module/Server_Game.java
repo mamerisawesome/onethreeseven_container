@@ -1,5 +1,5 @@
 // @ref Joseph Anthony C. Hermocilla
-package bin.com.game_module;
+package com.game_module;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -100,6 +100,8 @@ public class Server_Game implements Runnable, Game_Constants {
 
               game.update(pname, player);
               broadcast(game.toString());
+            }else{
+            	broadcast(game.toString());
             }
             break;
       }
