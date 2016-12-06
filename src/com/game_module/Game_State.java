@@ -16,14 +16,20 @@ public class Game_State{
     players.put(name,player);
   }
 
-  public String toString(){
+  public String toString(int type){
     String retval="";
     for(Iterator ite=players.keySet().iterator();ite.hasNext();){
       String name=(String)ite.next();
       Game_Player player=(Game_Player)players.get(name);
       retval+=player.toString();
-      retval+=" "+Integer.toString(x+=4);
-      retval+=" "+Integer.toString(y+=2);
+      if(type==1){
+    	  retval+=" "+Integer.toString(x+=1);
+    	  retval+=" "+Integer.toString(y+=1);
+      }
+      if(type==2){
+    	  retval+=" "+Integer.toString(x+=4);
+    	  retval+=" "+Integer.toString(y+=2);
+      }
       retval+=":";
     }
     return retval;
