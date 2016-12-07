@@ -19,7 +19,7 @@ public class Screen {
     Client_Chat cc = new Client_Chat(args[0], args[1]);
     System.out.println("[DONE] Added chat module");
 
-    Client_Game cg = new Client_Game(args[0], args[1]);
+    Client_Game cg = new Client_Game(args[0], args[1], main_cont);
     System.out.println("[DONE] Added game module");
 
     main_cont.add(cc, BorderLayout.WEST);

@@ -43,8 +43,10 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   int score;
   int counter = 0;
   
+  JPanel mainCont;
+  
   static boolean CONNECTED_FLAG = false;
-  static int TOTAL_TIME = 5;
+  static int TOTAL_TIME = 2;
   static int TIME_COUNTER = TOTAL_TIME;
   static TimerTask TIMER_TASK = new TimerTask () {
 	public void run () {
@@ -53,9 +55,10 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   };
   static Timer TIMER = new Timer("Game Timer");
   
-  public Client_Game (String server,final String name) throws Exception{
+  public Client_Game (String server,final String name, JPanel mainCont) throws Exception{
     this.server=server;
     this.name=name;
+    this.mainCont = mainCont;
 
     socket.setSoTimeout(100);
 
@@ -193,6 +196,11 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
       if (TIME_COUNTER <= 0) {
     	  TIMER.cancel();
     	  offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
+    	  
+    	  mainCont.removeAll();
+    	  mainCont.revalidate();
+    	  mainCont.repaint();
+    	  
           break;
       }
 	}
