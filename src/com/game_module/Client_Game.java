@@ -159,8 +159,8 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
 			case 6: g.setColor(Color.ORANGE); break;
 			case 7: g.setColor(Color.PINK); break;
         	}
-            g.fillOval(x, y, 20, 20);
-            offscreen.getGraphics().drawString(pname,x-10,y+30);
+            g.fillOval(x-10, y-10, 15, 15);
+            offscreen.getGraphics().drawString(pname,x-20,y+20);
             this.repaint();
           }
         }
