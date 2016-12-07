@@ -13,7 +13,7 @@ public class Screen {
   public static void main (String[] args) throws Exception {
     JFrame frame = new JFrame("Shot!");
     JPanel main_cont = new JPanel(new BorderLayout());
-
+    
     Client_Chat cc = new Client_Chat(args[0], args[1]);
     System.out.println("[DONE] Added chat module");
 

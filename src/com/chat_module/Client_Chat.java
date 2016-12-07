@@ -29,11 +29,11 @@ public class Client_Chat extends JPanel implements Chat_Constants {
       /* Open a Client_ChatSocket and connect to ServerSocket */
       System.out.println("Connecting to " + serverName + " on port " + PORT);
       //insert missing line here for creating a new socket for client and binding it to a port
-      final Socket client = new Socket(serverName, PORT);
+      final Socket client = new Socket(serverName, PORT);			
       System.out.println("Just connected to " + client.getRemoteSocketAddress());
       /* Send data to the ServerSocket */
       OutputStream outToServer = client.getOutputStream();
-      final DataOutputStream out = new DataOutputStream(outToServer);
+      final DataOutputStream out = new DataOutputStream(outToServer);	
 
       chatBox.setForeground(Color.BLACK);
       chatBox.addActionListener(new ActionListener() {
@@ -45,13 +45,13 @@ public class Client_Chat extends JPanel implements Chat_Constants {
             er.printStackTrace();
           }
         }
-      });
+      });      	
 
       Thread receive = new Thread(){
         public void run(){
           try{
             InputStream inFromServer = client.getInputStream();
-            DataInputStream in = new DataInputStream(inFromServer);
+            DataInputStream in = new DataInputStream(inFromServer);	
             while(true){
               messageBox.append(in.readUTF() + "\n");
             }
