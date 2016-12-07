@@ -56,8 +56,6 @@ public class Server_Game implements Runnable, Game_Constants {
   }
 
   public void run () {
-	  
-		  
     while(true){
       byte[] buf = new byte[256];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -70,42 +68,49 @@ public class Server_Game implements Runnable, Game_Constants {
       playerData = playerData.trim();
 
       switch (gameStage) {
-          case WAITING_FOR_PLAYERS:
-            if (playerData.startsWith("CONNECT")){
-              String tokens[] = playerData.split(" ");
-              Game_Player player=new Game_Player(tokens[1],packet.getAddress(),packet.getPort());
-              System.out.println("Player connected: "+tokens[1]);
-              game.update(tokens[1].trim(),player, playerCount);
-              broadcast("CONNECTED "+tokens[1]);
-              playerCount++;
-              if (playerCount==numPlayers){
-                gameStage=GAME_START;
-              }
-            }
-            break;
-          case GAME_START:
-            System.out.println("Game State: START");
-            broadcast("START");
-            gameStage=IN_PROGRESS;
-            break;
-          case IN_PROGRESS:
-            if (playerData.startsWith("PLAYER")){
-              // [FORM] PLAYER <player name> <x> <y>
-              String[] playerInfo = playerData.split(" ");
-              String pname =playerInfo[1];
-              int x = Integer.parseInt(playerInfo[2].trim());
-              int y = Integer.parseInt(playerInfo[3].trim());
 
-              Game_Player player=(Game_Player)game.getPlayers().get(pname);
-              player.setX(x);
-              player.setY(y);
-
-              game.update(pname, player, player.color);
-              broadcast(game.toString()); 
+        case WAITING_FOR_PLAYERS:
+          if (playerData.startsWith("CONNECT")){
+            String tokens[] = playerData.split(" ");
+            Game_Player player=new Game_Player(tokens[1],packet.getAddress(),packet.getPort());
+            System.out.println("Player connected: "+tokens[1]);
+            game.update(tokens[1].trim(),player, playerCount);
+            broadcast("CONNECTED "+tokens[1]);
+            playerCount++;
+            if (playerCount==numPlayers){
+              gameStage=GAME_START;
             }
+          }
+
+          break;
+
+        case GAME_START:
+          System.out.println("Game State: START");
+          broadcast("START");
+          gameStage=IN_PROGRESS;
+
+          break;
+
+        case IN_PROGRESS:
+
+          if (playerData.startsWith("PLAYER")){
+            // [FORM] PLAYER <player name> <x> <y>
+            String[] playerInfo = playerData.split(" ");
+            String pname =playerInfo[1];
+            int x = Integer.parseInt(playerInfo[2].trim());
+            int y = Integer.parseInt(playerInfo[3].trim());
+
+            Game_Player player=(Game_Player)game.getPlayers().get(pname);
+            player.setX(x);
+            player.setY(y);
+
+            game.update(pname, player, player.color);
             broadcast(game.toString());
-            
-            break;
+          }
+          broadcast(game.toString());
+
+          break;
+
       }
     }
   }

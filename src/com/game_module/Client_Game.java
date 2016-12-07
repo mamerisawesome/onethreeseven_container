@@ -49,12 +49,12 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   public void send(String msg){
     try{
       byte[] buf = msg.getBytes();
-        InetAddress address = InetAddress.getByName(server);
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
-        socket.send(packet);
-      } catch (Exception e) {
-        // do nothing
-      }
+      InetAddress address = InetAddress.getByName(server);
+      DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
+      socket.send(packet);
+    } catch (Exception e) {
+      // do nothing
+    }
   }
 
   public void run(){
@@ -95,33 +95,33 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             String[] shapes = playerInfo[5].split("_");
             String[] temp = null;
             for(int z = 0 ; z < shapes.length; z++){
-            	temp = shapes[z].split("/");
-            	switch(Integer.parseInt(temp[0])){
-    			case 0: g.setColor(Color.BLUE);  break;
-    			case 1: g.setColor(Color.RED); break;
-    			case 2: g.setColor(Color.ORANGE); break;
-    			case 3: g.setColor(Color.GREEN); break;
-    			case 4: g.setColor(Color.YELLOW); break;
-    			case 5: g.setColor(Color.MAGENTA); break;
-    			case 6: g.setColor(Color.ORANGE); break;
-    			case 7: g.setColor(Color.PINK); break;
-            	}
-            	g.fillRect(Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), 20, 20);
+              temp = shapes[z].split("/");
+              switch(Integer.parseInt(temp[0])){
+                case 0: g.setColor(Color.BLUE);     break;
+                case 1: g.setColor(Color.RED);      break;
+                case 2: g.setColor(Color.ORANGE);   break;
+                case 3: g.setColor(Color.GREEN);    break;
+                case 4: g.setColor(Color.YELLOW);   break;
+                case 5: g.setColor(Color.MAGENTA);  break;
+                case 6: g.setColor(Color.ORANGE);   break;
+                case 7: g.setColor(Color.PINK);     break;
+              }
+              g.fillRect(Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), 20, 20);
             }
 
             //int shapex = Integer.parseInt(playerInfo[4]);
             //int shapey = Integer.parseInt(playerInfo[5]);
             //offscreen.getGraphics().fillRect(shapex, shapey, 20, 20);
             switch(color){
-			case 0: g.setColor(Color.BLUE);  break;
-			case 1: g.setColor(Color.RED); break;
-			case 2: g.setColor(Color.ORANGE); break;
-			case 3: g.setColor(Color.GREEN); break;
-			case 4: g.setColor(Color.YELLOW); break;
-			case 5: g.setColor(Color.MAGENTA); break;
-			case 6: g.setColor(Color.ORANGE); break;
-			case 7: g.setColor(Color.PINK); break;
-        	}
+              case 0: g.setColor(Color.BLUE);       break;
+              case 1: g.setColor(Color.RED);        break;
+              case 2: g.setColor(Color.ORANGE);     break;
+              case 3: g.setColor(Color.GREEN);      break;
+              case 4: g.setColor(Color.YELLOW);     break;
+              case 5: g.setColor(Color.MAGENTA);    break;
+              case 6: g.setColor(Color.ORANGE);     break;
+              case 7: g.setColor(Color.PINK);       break;
+            }
             g.fillOval(x, y, 20, 20);
             offscreen.getGraphics().drawString(pname,x-10,y+30);
             this.repaint();
@@ -131,9 +131,8 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
     }
   }
 
-  
   public void paintComponent(Graphics g){
-	super.paintComponent(g);
+    super.paintComponent(g);
     g.drawImage(offscreen, 0, 0, Color.WHITE, null);
   }
 
@@ -150,10 +149,10 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
     public void keyPressed(KeyEvent ke){
       prevX=x;prevY=y;
       switch (ke.getKeyCode()){
-        case KeyEvent.VK_DOWN:y+=yspeed;break;
-        case KeyEvent.VK_UP:y-=yspeed;break;
-        case KeyEvent.VK_LEFT:x-=xspeed;break;
-        case KeyEvent.VK_RIGHT:x+=xspeed;break;
+        case KeyEvent.VK_DOWN:y+=yspeed;    break;
+        case KeyEvent.VK_UP:y-=yspeed;      break;
+        case KeyEvent.VK_LEFT:x-=xspeed;    break;
+        case KeyEvent.VK_RIGHT:x+=xspeed;   break;
       }
       if (prevX != x || prevY != y){
         send("PLAYER "+name+" "+x+" "+y);
