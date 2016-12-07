@@ -28,16 +28,12 @@ public class Server_Chat implements Chat_Constants {
                         out.writeUTF(message);
                       }
                     }
-                  } catch (Exception e) {
-                    e.printStackTrace();
-                  }
+                  } catch (Exception e) {}
                 }
               };
               send.start();
             }
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
+          } catch (Exception e) {}
         }
       };
       accept.start();
