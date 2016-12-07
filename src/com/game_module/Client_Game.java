@@ -56,7 +56,7 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   JPanel mainCont;
   
   static boolean CONNECTED_FLAG = false;
-  static int TOTAL_TIME = 1;
+  static int TOTAL_TIME = 5;
   static int TIME_COUNTER = TOTAL_TIME;
   static TimerTask TIMER_TASK = new TimerTask () {
 	public void run () {
@@ -200,6 +200,22 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             g.setColor(Color.GREEN);
             g.fillRect(95-offsetx, 41-offsety, TIME_COUNTER * 20, 10);
             
+            int highest = -1;
+            int h_index = 0;
+            for (int ii=0;ii<playersInfo.length;ii++) {
+            	String[] pinf = playersInfo[ii].split(" ");
+            	int ps = Integer.parseInt(pinf[5]);
+            	
+            	if (ps > highest) {
+            		highest = ps;
+            		h_index = ii;
+            	}
+            }
+            if (highest > -1) offscreen.getGraphics().drawString("Highest score: "+highest, 860, 480);
+            else offscreen.getGraphics().drawString("Highest score: n/a", 860, 480);
+            g.setColor(Color.GREEN);
+            g.fillRect(95-offsetx, 41-offsety, TIME_COUNTER * 20, 10);
+            
             this.repaint();
           }
         }
@@ -222,21 +238,57 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
     	  String scoreboard = "";
     	  
     	  scoreboard += ""+
-    			  "<html><body>"+
-    			  	"<h1>TOP SCORERS</h1"+
-    			  	"<br>"+
-    			  	"<br>";
+    			  "<html>"+
+    			  "<head>"+
+    			  "</head>"+
+    			  "<body>"+
+	    			  "<div style='width: 900px;text-align: center;'>"+
+	    			  "<div style='display: inline-block;'>"+
+	    			  	"<h1 style='font-size:25px; width: 900px;text-align: center;'>TOP SCORERS</h1"+
+	    			  	"<br>"+
+	    			  	"<br>";
     	  
-    	  for(String info: playersInfo){
-    		  String[] playerInfo = info.split(" ");
+    	  scoreboard += ""+
+				  "<table class='table' style='font-size:10px;'>"+
+				  	"<thead>"+
+				  		"<tr>"+
+				  			"<th>NAME</th>"+
+				  			"<th>SCORE</th>"+
+				  		"</tr>"+
+				  	"</thead>"+
+				  	"<tbody>";
+    	  
+    	  int [][] arr = new int[playersInfo.length][2];
+    	  for (int jj = 0; jj < playersInfo.length; jj += 1) {
+    		  arr[jj][0] = jj;
+    		  arr[jj][1] = Integer.parseInt(playersInfo[jj].split(" ")[5]);
+    	  }
+    	  
+    	  java.util.Arrays.sort(arr, new java.util.Comparator<int[]>() {
+    		    public int compare(int[] a, int[] b) {
+    		        return Double.compare(a[1], b[1]);
+    		    }
+    		});
+    	  
+    	  for(int kk = 0; kk < playersInfo.length; kk += 1){
+    		  String name = playersInfo[arr[kk][0]].split(" ")[1];
+    		  String score = arr[kk][1] + "";
     		  
-    		  scoreboard += playerIndex+". "+playerInfo[1]+" SCORE: "+playerInfo[5]+"<br>"; 
-    		  
-    		  playerIndex++;
+    		  scoreboard += ""+
+    				  "<tr>"+
+    				  	"<td>" + name + "</td>"+
+    				  	"<td>" + score + "</td>"+
+    				  "</tr>";
     	  }
     	  
     	  scoreboard += ""+
-    			  "</body></html>";
+    			  	"</tbody>"+
+				  "</table>";
+    	  
+    	  scoreboard += ""+
+    			  "</div>"+
+    			  "</div>"+
+    		"</body></html>";
     	  
     	  mainCont.add(new JLabel(scoreboard), BorderLayout.NORTH);
     	  mainCont.revalidate();

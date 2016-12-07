@@ -9,23 +9,39 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Screen {
 	public Screen(){
 		final JFrame oFrame = new JFrame("Shot!");
 		JPanel panel = new JPanel();
+		
+		String headlab = "<html><h1 style='font-size:50px;'>SH<span style='color:red;'>O</span>T!</h1><br></html>";
+		JLabel shotlab = new JLabel(headlab);
+		panel.add(shotlab);
+		
 		final JTextField t1 = new JTextField("IP Address");
-		final JTextField t2 = new JTextField("Name");
-		JButton submit = new JButton("Play");
 		panel.add(t1);
+		
+		final JTextField t2 = new JTextField("Name");
 		panel.add(t2);
+		
+		JButton submit = new JButton("Play");
+		submit.setBackground(Color.orange);
 		panel.add(submit);
+		
+		JButton instr = new JButton("Instructions");
+		instr.setBackground(Color.orange);
+		panel.add(instr);
+		
+		panel.setBackground(Color.LIGHT_GRAY);
 		oFrame.add(panel);
 		oFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    oFrame.setVisible(true);
-	    oFrame.setSize(300,300);
-		submit.addActionListener(new ActionListener() { 
+	    oFrame.setSize(300,270);
+		
+	    submit.addActionListener(new ActionListener() { 
 		  public void actionPerformed(ActionEvent e) { 
 			  oFrame.setVisible(false);
 			  try {
@@ -35,6 +51,18 @@ public class Screen {
 				e1.printStackTrace();
 			}
 		  } 
+		});
+		
+	    instr.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+//				  BufferedImage img = null;
+//				  try {
+//					  img = ImageIO.read(new File("bg.jpg"));
+//					  img.getGraphics().drawImage(img, 0, 0, null);
+//				  } catch (IOException ioe) { }
+				  String instr = "<html><div><h1>INSTRUCTIONS</h1><h2>MAIN GOAL</h2><p>Goal of the game is simple. Move to distract your opponents. Shoot shapes of the same color with you to gain points.</p><h2>NOTE</h2><p>Be wary of the timer.</p><p>You can use the chatbox to say whatever you want to feel or think about them.</p></div></html>";
+				  JOptionPane.showMessageDialog(oFrame, new JLabel(instr));
+			  } 
 		});
 	}
   public static void gameUI(String ip, String name) throws Exception{
