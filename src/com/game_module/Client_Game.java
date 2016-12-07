@@ -45,10 +45,10 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   
   static boolean CONNECTED_FLAG = false;
   static int TOTAL_TIME = 5;
-  static int TIME_COUNTER = 0;
+  static int TIME_COUNTER = TOTAL_TIME;
   static TimerTask TIMER_TASK = new TimerTask () {
 	public void run () {
-		TIME_COUNTER += 1;
+		TIME_COUNTER -= 1;
 	} 
   };
   static Timer TIMER = new Timer("Game Timer");
@@ -69,8 +69,6 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
         public void mousePressed(MouseEvent e) {
           for(int i = 0 ; i < r.length; i++){
         		if(r[i].contains(e.getX(),e.getY()) && colors[i]==playerColor){
-        			//score++;
-        			//System.out.println("HIT HIT MOTHER FUCKER " + (score++));
         			Random rand = new Random();
         			int newX = rand.nextInt(1000);
         			int newY = rand.nextInt(500);
@@ -113,7 +111,6 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
       serverData=serverData.trim();
 
       Graphics2D g = offscreen.createGraphics();
-      //offscreen = (BufferedImage) this.createImage(gwidth,gheight);
       if (!connected && serverData.startsWith("CONNECTED")) {
         connected=true;
         System.out.println("Connected.");
@@ -147,7 +144,6 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             	temp = shapes[z].split("/");
             	colors[z] = Integer.parseInt(temp[0]);
             	if(counter<10){
-                	System.out.println(shapes.length);
             		r[z] = new Rectangle(Integer.parseInt(temp[1]),Integer.parseInt(temp[2]),20,20);
             		counter++;
             	}else{
@@ -166,42 +162,42 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             	g.fillRect(Integer.parseInt(temp[1]), Integer.parseInt(temp[2]), 20, 20);
             }
 
-            //int shapex = Integer.parseInt(playerInfo[4]);
-            //int shapey = Integer.parseInt(playerInfo[5]);
-            //offscreen.getGraphics().fillRect(shapex, shapey, 20, 20);
             switch(color){
-			case 0: g.setColor(Color.BLUE);  break;
-			case 1: g.setColor(Color.RED); break;
-			case 2: g.setColor(Color.ORANGE); break;
-			case 3: g.setColor(Color.GREEN); break;
-			case 4: g.setColor(Color.YELLOW); break;
-			case 5: g.setColor(Color.MAGENTA); break;
-			case 6: g.setColor(Color.ORANGE); break;
-			case 7: g.setColor(Color.PINK); break;
-        	}
+              case 0: g.setColor(Color.BLUE);  break;
+              case 1: g.setColor(Color.RED); break;
+              case 2: g.setColor(Color.ORANGE); break;
+              case 3: g.setColor(Color.GREEN); break;
+              case 4: g.setColor(Color.YELLOW); break;
+              case 5: g.setColor(Color.MAGENTA); break;
+              case 6: g.setColor(Color.ORANGE); break;
+              case 7: g.setColor(Color.PINK); break;
+            }
             g.fillOval(x-10, y-10, 15, 15);
             offscreen.getGraphics().drawString(pname+" | "+Integer.toString(pscore),x-10,y+20);
+            
+            int offsetx = 45;
+            int offsety = 30;
+            offscreen.getGraphics().drawString("Timer: ", 50-offsetx, 50-offsety);
+            
+            float timePercent = (((float)(TIME_COUNTER+1)/TOTAL_TIME) * 100);
+            offscreen.getGraphics().drawString((int)timePercent+" % time remaining", 50-offsetx, 70-offsety);
+            g.setColor(Color.GREEN);
+            g.fillRect(95-offsetx, 41-offsety, TIME_COUNTER * 20, 10);
+            
             this.repaint();
           }
         }
       }
       
       // check if end of counter
-      if (TIME_COUNTER >= TOTAL_TIME) {
-    	  System.out.println("TIME ENDED!");
+      if (TIME_COUNTER <= 0) {
     	  TIMER.cancel();
     	  offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
           break;
-      } else {
-    	  System.out.print("TOTAL TIME: ");
-    	  System.out.println(TOTAL_TIME);
-    	  System.out.println("TIME IS RUNNING BITCHES!");
-    	  System.out.println(TIME_COUNTER);
       }
 	}
   }
 
-  
   public void paintComponent(Graphics g){
 	super.paintComponent(g);
     g.drawImage(offscreen, 0, 0, Color.WHITE, null);
