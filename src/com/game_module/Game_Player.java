@@ -8,6 +8,7 @@ public class Game_Player {
   private int port;
   private String name;
   private int x,y;
+  int color;
 
   public Game_Player(String name,InetAddress address, int port){
     this.address = address;
@@ -48,7 +49,8 @@ public class Game_Player {
     retval+="PLAYER ";
     retval+=name+" ";
     retval+=x+" ";
-    retval+=y;
+    retval+=y+" ";
+    retval+=color;
     return retval;
   }
 }
