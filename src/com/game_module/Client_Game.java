@@ -19,6 +19,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,7 +40,19 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   Rectangle[] r = new Rectangle[10];
   int[] colors = new int[10];
   int playerColor;
-  int score = 0;
+  int score;
+  int counter = 0;
+  
+  static boolean CONNECTED_FLAG = false;
+  static int TOTAL_TIME = 5;
+  static int TIME_COUNTER = 0;
+  static TimerTask TIMER_TASK = new TimerTask () {
+	public void run () {
+		TIME_COUNTER += 1;
+	} 
+  };
+  static Timer TIMER = new Timer("Game Timer");
+  
   public Client_Game (String server,final String name) throws Exception{
     this.server=server;
     this.name=name;
@@ -46,8 +60,7 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
     socket.setSoTimeout(100);
 
     this.setPreferredSize(new Dimension(gwidth, gheight));
-    this.addKeyListener(new KeyHandler());
-
+    
     t.start();
     this.addMouseMotionListener(new MouseMotionHandler());
     addMouseListener(new MouseAdapter() {
@@ -56,11 +69,12 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
         public void mousePressed(MouseEvent e) {
           for(int i = 0 ; i < r.length; i++){
         		if(r[i].contains(e.getX(),e.getY()) && colors[i]==playerColor){
-        			System.out.println("HIT HIT MOTHER FUCKER " + (score++));
+        			//score++;
+        			//System.out.println("HIT HIT MOTHER FUCKER " + (score++));
         			Random rand = new Random();
         			int newX = rand.nextInt(1000);
         			int newY = rand.nextInt(500);
-        			send("PLAYER "+name+" "+x+" "+y+" "+i+"/"+newX+"/"+newY);
+        			send("PLAYER "+name+" "+x+" "+y+" "+(score+1)+" "+i+"/"+newX+"/"+newY);
         		}
           }
         }
@@ -82,8 +96,7 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   }
 
   public void run(){
-	int counter=0;
-    while(true){
+	while(true){
       try{
         Thread.sleep(1);
       }catch(Exception ioe){}
@@ -104,11 +117,16 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
       if (!connected && serverData.startsWith("CONNECTED")) {
         connected=true;
         System.out.println("Connected.");
-      } else if (!connected) {
+      }
+      else if (!connected) {
         System.out.println("Connecting..");
         send("CONNECT "+name);
       } else if (connected) {
-        offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
+        if(!CONNECTED_FLAG){
+        	CONNECTED_FLAG = true;
+        	TIMER.scheduleAtFixedRate(TIMER_TASK, 0, TOTAL_TIME * 1000);
+        }
+    	 offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
         if (serverData.startsWith("PLAYER")) {
           String[] playersInfo = serverData.split(":");
           for (int i=0;i<playersInfo.length;i++) {
@@ -118,9 +136,11 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             int y = Integer.parseInt(playerInfo[3]);
             if(name.equals(pname)){
             	playerColor = Integer.parseInt(playerInfo[4]);
+            	score = Integer.parseInt(playerInfo[5]);
             }
             int color = Integer.parseInt(playerInfo[4]);
-            String[] shapes = playerInfo[5].split("_");
+            int pscore = Integer.parseInt(playerInfo[5]);
+            String[] shapes = playerInfo[6].split("_");
             String[] temp = null;
             for(int z = 0 ; z < shapes.length; z++){
             	
@@ -160,12 +180,25 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
 			case 7: g.setColor(Color.PINK); break;
         	}
             g.fillOval(x-10, y-10, 15, 15);
-            offscreen.getGraphics().drawString(pname,x-20,y+20);
+            offscreen.getGraphics().drawString(pname+" | "+Integer.toString(pscore),x-10,y+20);
             this.repaint();
           }
         }
       }
-    }
+      
+      // check if end of counter
+      if (TIME_COUNTER >= TOTAL_TIME) {
+    	  System.out.println("TIME ENDED!");
+    	  TIMER.cancel();
+    	  offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
+          break;
+      } else {
+    	  System.out.print("TOTAL TIME: ");
+    	  System.out.println(TOTAL_TIME);
+    	  System.out.println("TIME IS RUNNING BITCHES!");
+    	  System.out.println(TIME_COUNTER);
+      }
+	}
   }
 
   
@@ -178,23 +211,9 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
     public void mouseMoved(MouseEvent me){
       x=me.getX();y=me.getY();
       if (prevX != x || prevY != y){
-        send("PLAYER "+name+" "+x+" "+y);
+        send("PLAYER "+name+" "+x+" "+y+" "+score);
       }
     }
   }
 
-  class KeyHandler extends KeyAdapter{
-    public void keyPressed(KeyEvent ke){
-      prevX=x;prevY=y;
-      switch (ke.getKeyCode()){
-        case KeyEvent.VK_DOWN:y+=yspeed;break;
-        case KeyEvent.VK_UP:y-=yspeed;break;
-        case KeyEvent.VK_LEFT:x-=xspeed;break;
-        case KeyEvent.VK_RIGHT:x+=xspeed;break;
-      }
-      if (prevX != x || prevY != y){
-        send("PLAYER "+name+" "+x+" "+y);
-      }
-    }
-  }
 }

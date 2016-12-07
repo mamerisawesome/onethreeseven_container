@@ -95,9 +95,13 @@ public class Server_Game implements Runnable, Game_Constants {
               String pname =playerInfo[1];
               int x = Integer.parseInt(playerInfo[2].trim());
               int y = Integer.parseInt(playerInfo[3].trim());
+              int score = Integer.parseInt(playerInfo[4].trim());
               
-              if (playerInfo.length == 5) {
-            	 String[] newData = playerInfo[4].split("/");
+              //Game_Player temp_Player = (Game_Player)game.getPlayers().get(pname);
+              //temp_Player.incrementScore();
+              
+              if (playerInfo.length == 6) {
+            	 String[] newData = playerInfo[5].split("/");
             	 
             	 int index = Integer.parseInt(newData[0]);
             	 int newX = Integer.parseInt(newData[1]);
@@ -110,6 +114,7 @@ public class Server_Game implements Runnable, Game_Constants {
               Game_Player player=(Game_Player)game.getPlayers().get(pname);
               player.setX(x);
               player.setY(y);
+              player.setScore(score);
 
               game.update(pname, player, player.color);
               broadcast(game.toString()); 
