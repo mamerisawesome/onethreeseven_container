@@ -56,8 +56,8 @@ public class Server_Game implements Runnable, Game_Constants {
   }
 
   public void run () {
-	  
-		  
+
+
     while(true){
       byte[] buf = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -96,19 +96,16 @@ public class Server_Game implements Runnable, Game_Constants {
               int x = Integer.parseInt(playerInfo[2].trim());
               int y = Integer.parseInt(playerInfo[3].trim());
               int score = Integer.parseInt(playerInfo[4].trim());
-              
-              //Game_Player temp_Player = (Game_Player)game.getPlayers().get(pname);
-              //temp_Player.incrementScore();
-              
+
               if (playerInfo.length == 6) {
-            	 String[] newData = playerInfo[5].split("/");
-            	 
-            	 int index = Integer.parseInt(newData[0]);
-            	 int newX = Integer.parseInt(newData[1]);
-            	 int newY = Integer.parseInt(newData[2]);
-            	 
-            	 game.s[index].setX(newX);
-            	 game.s[index].setX(newY);
+               String[] newData = playerInfo[5].split("/");
+
+               int index = Integer.parseInt(newData[0]);
+               int newX = Integer.parseInt(newData[1]);
+               int newY = Integer.parseInt(newData[2]);
+
+               game.s[index].setX(newX);
+               game.s[index].setX(newY);
               }
 
               Game_Player player=(Game_Player)game.getPlayers().get(pname);
@@ -117,10 +114,10 @@ public class Server_Game implements Runnable, Game_Constants {
               player.setScore(score);
 
               game.update(pname, player, player.color);
-              broadcast(game.toString()); 
+              broadcast(game.toString());
             }
             broadcast(game.toString());
-            
+
             break;
       }
     }

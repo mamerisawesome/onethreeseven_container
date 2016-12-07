@@ -10,7 +10,7 @@ public class Game_Player {
   private int x,y;
   int color;
   int score = 0;
-  
+
   public Game_Player(String name,InetAddress address, int port){
     this.address = address;
     this.port = port;
@@ -20,9 +20,9 @@ public class Game_Player {
   public InetAddress getAddress(){
     return address;
   }
-  
+
   public void setScore(int score){
-	  this.score = score;
+    this.score = score;
   }
 
   public int getPort(){
