@@ -59,7 +59,7 @@ public class Server_Game implements Runnable, Game_Constants {
 	  
 		  
     while(true){
-      byte[] buf = new byte[256];
+      byte[] buf = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try {
         serverSocket.receive(packet);

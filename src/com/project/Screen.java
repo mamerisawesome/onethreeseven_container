@@ -13,10 +13,10 @@ import javax.swing.*;
 
 public class Screen {
 	public Screen(){
-		JFrame oFrame = new JFrame("Shot!");
+		final JFrame oFrame = new JFrame("Shot!");
 		JPanel panel = new JPanel();
-		JTextField t1 = new JTextField("IP Address");
-		JTextField t2 = new JTextField("Name");
+		final JTextField t1 = new JTextField("IP Address");
+		final JTextField t2 = new JTextField("Name");
 		JButton submit = new JButton("Play");
 		panel.add(t1);
 		panel.add(t2);

@@ -1,11 +1,15 @@
 // @ref Joseph Anthony C. Hermocilla
 package com.game_module;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,8 +26,13 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import com.project.Screen;
 
 public class Client_Game extends JPanel implements Runnable, Game_Constants{
   int x=10,y=10,xspeed=2,yspeed=2,prevX,prevY;
@@ -42,16 +51,17 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
   int playerColor;
   int score;
   int counter = 0;
+  String[] playersInfo;
   
   JPanel mainCont;
   
   static boolean CONNECTED_FLAG = false;
-  static int TOTAL_TIME = 2;
+  static int TOTAL_TIME = 1;
   static int TIME_COUNTER = TOTAL_TIME;
   static TimerTask TIMER_TASK = new TimerTask () {
 	public void run () {
 		TIME_COUNTER -= 1;
-	} 
+	}
   };
   static Timer TIMER = new Timer("Game Timer");
   
@@ -102,7 +112,7 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
         Thread.sleep(1);
       }catch(Exception ioe){}
 
-      byte[] buf = new byte[256];
+      byte[] buf = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
       try{
         socket.receive(packet);
@@ -121,16 +131,18 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
       else if (!connected) {
         System.out.println("Connecting..");
         send("CONNECT "+name);
-      } else if (connected) {
-        if(!CONNECTED_FLAG){
-        	CONNECTED_FLAG = true;
-        	TIMER.scheduleAtFixedRate(TIMER_TASK, 0, TOTAL_TIME * 1000);
-        }
-    	 offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
+      } else if (connected) {  
+    	offscreen.getGraphics().clearRect(0, 0, gwidth, gheight);
         if (serverData.startsWith("PLAYER")) {
-          String[] playersInfo = serverData.split(":");
+          playersInfo = serverData.split(":");
+          if(!CONNECTED_FLAG){
+            	CONNECTED_FLAG = true;
+            	TIMER.scheduleAtFixedRate(TIMER_TASK, 0, TOTAL_TIME * 1000);
+          }
           for (int i=0;i<playersInfo.length;i++) {
+        	  System.out.println(playersInfo[i]);
             String[] playerInfo = playersInfo[i].split(" ");
+            
             String pname =playerInfo[1];
             int x = Integer.parseInt(playerInfo[2]);
             int y = Integer.parseInt(playerInfo[3]);
@@ -147,6 +159,7 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             	temp = shapes[z].split("/");
             	colors[z] = Integer.parseInt(temp[0]);
             	if(counter<10){
+            		System.out.println(z);
             		r[z] = new Rectangle(Integer.parseInt(temp[1]),Integer.parseInt(temp[2]),20,20);
             		counter++;
             	}else{
@@ -190,6 +203,7 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
             this.repaint();
           }
         }
+        
       }
       
       // check if end of counter
@@ -200,6 +214,37 @@ public class Client_Game extends JPanel implements Runnable, Game_Constants{
     	  mainCont.removeAll();
     	  mainCont.revalidate();
     	  mainCont.repaint();
+    	  
+    	  System.out.println("THIS IS THE END");
+    	  int playerIndex = 1;
+    	  mainCont.setLayout(new BorderLayout());
+    	  
+    	  String scoreboard = "";
+    	  
+    	  scoreboard += ""+
+    			  "<html><body>"+
+    			  	"<h1>TOP SCORERS</h1"+
+    			  	"<br>"+
+    			  	"<br>";
+    	  
+    	  for(String info: playersInfo){
+    		  String[] playerInfo = info.split(" ");
+    		  
+    		  scoreboard += playerIndex+". "+playerInfo[1]+" SCORE: "+playerInfo[5]+"<br>"; 
+    		  
+    		  playerIndex++;
+    	  }
+    	  
+    	  scoreboard += ""+
+    			  "</body></html>";
+    	  
+    	  mainCont.add(new JLabel(scoreboard), BorderLayout.NORTH);
+    	  mainCont.revalidate();
+    	  mainCont.repaint();
+    	  
+    	  final JFrame frame = (JFrame)SwingUtilities.getRoot(mainCont);
+    	  frame.revalidate();
+    	  frame.repaint();
     	  
           break;
       }
