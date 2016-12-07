@@ -7,6 +7,7 @@ import java.net.DatagramSocket;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class Server_Game implements Runnable, Game_Constants {
   String playerData;
@@ -55,6 +56,8 @@ public class Server_Game implements Runnable, Game_Constants {
   }
 
   public void run () {
+	  
+		  
     while(true){
       byte[] buf = new byte[256];
       DatagramPacket packet = new DatagramPacket(buf, buf.length);
@@ -63,7 +66,6 @@ public class Server_Game implements Runnable, Game_Constants {
       } catch (Exception ioe) {
         // do nothing
       }
-
       playerData = new String(buf);
       playerData = playerData.trim();
 
@@ -73,7 +75,7 @@ public class Server_Game implements Runnable, Game_Constants {
               String tokens[] = playerData.split(" ");
               Game_Player player=new Game_Player(tokens[1],packet.getAddress(),packet.getPort());
               System.out.println("Player connected: "+tokens[1]);
-              game.update(tokens[1].trim(),player);
+              game.update(tokens[1].trim(),player, playerCount);
               broadcast("CONNECTED "+tokens[1]);
               playerCount++;
               if (playerCount==numPlayers){
@@ -98,14 +100,13 @@ public class Server_Game implements Runnable, Game_Constants {
               player.setX(x);
               player.setY(y);
 
-              game.update(pname, player);
-              broadcast(game.toString(1));
-            }else{
-            	broadcast(game.toString(2));
+              game.update(pname, player, player.color);
+              broadcast(game.toString()); 
             }
+            broadcast(game.toString());
+            
             break;
       }
     }
   }
 }
-
